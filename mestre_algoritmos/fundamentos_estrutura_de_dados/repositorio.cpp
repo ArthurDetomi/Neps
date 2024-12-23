@@ -11,7 +11,7 @@ int main() {
   cin.tie(0);
 
   int C, N, P, V;
-
+\
   cin >> C >> N;
 
   unordered_map<int, int> installed_programs;
