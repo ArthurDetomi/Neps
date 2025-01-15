@@ -6,6 +6,56 @@
 
 using namespace std;
 
+list<int> impares(int vet[], int size) {
+  if (size == 0) {
+    return list<int>();
+  }
+  if (vet[0] % 2 == 0) {
+    return impares(vet + 1, size - 1);
+  }
+  list<int> lista = impares(vet + 1, size - 1);
+
+  lista.push_front(vet[0]);
+
+  return lista;
+}
+
+list<int> impares2(int vet[], int size, list<int> &acc) {
+  if (size == 0) {
+    return acc;
+  }
+  if (vet[0] % 2 == 0) {
+    return impares2(vet + 1, size - 1, acc);
+  }
+  acc.push_back(vet[0]);
+  return impares2(vet + 1, size - 1, acc);
+}
+
+int index_of(int vet[], int size, int value) {
+  if (size == 0) {
+    return -1;
+  }
+
+  if (vet[0] == value) {
+    return 0;
+  }
+
+  int dist = index_of(vet + 1, size - 1, value);
+
+  return dist == -1 ? -1 : dist + 1;
+}
+
+int index_of_2(int vet[], int size, int value, int index = 0) {
+  if (size == 0) {
+    return -1;
+  }
+  if (vet[0] == value) {
+    return index;
+  }
+
+  return index_of_2(vet + 1, size - 1, value, index + 1);
+}
+
 int vet_sum(int v[], int size) {
   if (size == 0) {
     return 0;
@@ -55,6 +105,23 @@ int main() {
   cout << vet_min(vet, size) << endl;
 
   cout << vet_min_calda(vet, size) << endl;
+
+  cout << index_of(vet, size, 5) << endl;
+
+  cout << index_of_2(vet, size, 5) << endl;
+
+  list<int> imps = impares(vet, size);
+
+  for (auto v : imps) {
+    cout << v << " ";
+  }
+  cout << endl;
+
+  list<int> acc;
+  for (auto v : impares2(vet, size, acc)) {
+    cout << v << " ";
+  }
+  cout << endl;
 
   return 0;
 }
