@@ -1,41 +1,56 @@
-#include <iostream>
-#include <vector>
+#include <bits/stdc++.h>
+
 using namespace std;
 
-vector<vector<int>> adj;
-vector<int> size;
+#define MAXN 100001
+#define UNBALANCED -1
 
-int solve(int v) {
-  int count_v = 0, count_a = 0, tmp;
+vector<int> adj[MAXN];
 
-  for (int a : adj[v]) {
-    tmp = solve(a);
+int N;
 
-    printf("v=%d a=%d, count_v = %d, count_a = %d, tmp = %d\n", v, a, count_v,
-           count_a, tmp);
+int subtree_size(int current_vertex) {
+  int count = 1, expected = -1;
 
-    if (tmp == -1)
-      return -1;
-    if (!count_a)
-      count_a = tmp;
-    else if (count_a != tmp)
-      return -1;
+  for (int neighbor : adj[current_vertex]) {
+    int weight_neighbor = subtree_size(neighbor);
 
-    count_v += count_a;
+    printf("curr = %d count = %d weigh = %d expe = %d\n", current_vertex, count,
+           weight_neighbor, expected);
+
+    if (weight_neighbor == UNBALANCED) {
+      return UNBALANCED;
+    }
+
+    if (expected == -1) {
+      expected = weight_neighbor;
+    } else if (expected != weight_neighbor) {
+      return UNBALANCED;
+    }
+
+    count += weight_neighbor;
   }
-  return count_v + 1;
+
+  return count;
 }
 
+bool is_balanced() { return subtree_size(0) != UNBALANCED; }
+
 int main() {
-  int N;
+  ios_base::sync_with_stdio(0);
+  cin.tie(0);
+
   cin >> N;
-  adj = vector<vector<int>>(N + 1, vector<int>());
+
+  int a, b;
+
   for (int i = 0; i < N; i++) {
-    int u, v;
-    cin >> u >> v;
-    adj[v].push_back(u);
+    cin >> a >> b;
+
+    adj[b].push_back(a);
   }
-  int ans = solve(0) != -1;
-  cout << (ans ? "bem" : "mal") << endl;
+
+  printf("%s\n", (is_balanced()) ? "bem" : "mal");
+
   return 0;
 }
